@@ -1,0 +1,83 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = browser
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = true
+build_property.IncludeAllContentForSelfExtract = 
+build_property.RootNamespace = BlazorWasm
+build_property.RootNamespace = BlazorWasm
+build_property.ProjectDir = /Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/AddPost.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQWRkUG9zdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/CreateNew.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ3JlYXRlTmV3LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRmV0Y2hEYXRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Posts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUG9zdHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL1N1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Comments.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29tbWVudHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-k454xubtlb
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-thay4ttibw
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8urcz78uys
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/LoginButton.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTG9naW5CdXR0b24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-q2zyn7p9dq
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Profile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-mvrd92dsil
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Pages/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUmVnaXN0ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-4ejsow6zst
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL01haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-1zyi5k7sc3
+
+[/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkL05hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ab70abdmhw

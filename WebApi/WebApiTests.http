@@ -1,0 +1,19 @@
+POST https://localhost:7214/api/login
+Content-Type: application/json
+
+{ "Email" : "sjalilh@gmail.com", "Password" : "string" }
+
+###
+
+
+GET https://localhost:7214/api/User/writer
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKV1RTZXJ2aWNlQWNjZXNzVG9rZW4iLCJqdGkiOiIyMzU0NTMxYS04NjIwLTQ0N2MtOGIzYy01MTVjZGJhNmNhNGUiLCJpYXQiOiIwMy8xMS8yMDIyIDEzLjMzLjA0IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6ImphbGlsaHUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJXcml0ZXIiLCJEaXNwbGF5TmFtZSI6ImphbGlsIiwiRW1haWwiOiJzamFsaWxoQGdtYWlsLmNvbSIsIlNlY3VyaXR5TGV2ZWwiOiIyIiwiZXhwIjoxNjY3NDg1OTg0LCJpc3MiOiJKV1RBdXRoZW50aWNhdGlvblNlcnZlciIsImF1ZCI6IkpXVFNlcnZpY2VCbGF6b3JXYXNtQ2xpZW50In0.ILtsnPl1X4tTbHQLz5mNbTC4503gPFVNtzttoVyO_ugOyyNDYvR_hPeZ6rNxfRnLy1KPqevjHB3xdJEGk6Y5ZA
+
+###
+POST https://localhost:7214/api/Find/jalilhu
+Content-Type: application/json
+
+{ "Username" : "jalilhu" }
+
+
+

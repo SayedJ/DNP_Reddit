@@ -16,6 +16,7 @@ public class PostLogic : IPostLogic
         this.postDao = postDao;
         this.userDao = userDao;
         this.commDao = commDao;
+       
 
     }
     

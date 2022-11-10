@@ -1,0 +1,104 @@
+.note[b-4ejsow6zst]
+{
+    text-align: center;
+    height: 80px;
+    background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+    color: #fff;
+    font-weight: bold;
+    line-height: 80px;
+}
+.div-part[b-4ejsow6zst] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 20px auto;
+    width: 250px;
+    height: 250px;
+    background: white;
+    border-radius: 75px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    transition: 1s box-shadow;
+}
+
+.div-part:hover[b-4ejsow6zst] {
+    box-shadow: 0 5px 35px 0px rgba(0,0,0,.1);
+}
+
+.div-part:hover[b-4ejsow6zst]::before, .div-part:hover[b-4ejsow6zst]::after {
+    display: block;
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: #FDA8CF;
+    border-radius: 75px;
+    z-index: -1;
+    animation: 1s clockwise infinite;
+}
+
+.div-part:hover[b-4ejsow6zst]:after {
+    background: #F3CE5E;
+    animation: 2s counterclockwise infinite;
+}
+
+/*body {*/
+/*    margin: 0;*/
+/*    font-family: 'Lato', sans-serif;*/
+/*    font-size: 12px;*/
+/*    line-height: 1.8em;*/
+/*    text-transform: none;*/
+/*    letter-spacing: .075em;*/
+/*    font-weight: bold;*/
+/*    font-style: normal;*/
+/*    text-decoration: none;*/
+/*    color: #e7bd74;*/
+/*    background-color: rgba(34,28,28);*/
+/*    display: block;*/
+/*}*/
+.title[b-4ejsow6zst] {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.form-content[b-4ejsow6zst]
+{
+    padding: 5%;
+    border: 1px solid #ced4da;
+    margin-bottom: 2%;
+}
+.form-control[b-4ejsow6zst] {
+    border-radius: 1.5rem;
+}
+.btnSubmit[b-4ejsow6zst]
+{
+    border: none;
+    border-radius: 1.5rem;
+    padding: 1%;
+    width: 20%;
+    cursor: pointer;
+    background: #0062cc;
+    color: #fff;
+}
+h1[b-4ejsow6zst] {
+    font-family: sans-serif;
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 3px;
+    color: hotpink;
+    text-transform: uppercase;
+    padding-top: 20px;
+}
+a[b-4ejsow6zst] {
+    text-decoration: none;
+    color: #fff;
+}
+a:hover[b-4ejsow6zst] {
+    text-decoration: none;
+    color: #fff;
+}  
+  

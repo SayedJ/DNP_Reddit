@@ -1,0 +1,115 @@
+@using Domain.DTOs
+@using BootstrapBlazor.Components
+@using Domain.Models
+@using Httpclient.ClientInterfaces
+@using Console = System.Console
+@inject ICommentService commentService
+@if (ShowBackdrop)
+{
+    <div class="container">
+
+        <div class="row">
+            <div class="col-6">
+                <div class="comment">
+                    <p>@dto.CommentTitle</p>
+                    <p>@dto.CommentDescription</p>
+                </div><!--End Comment-->
+            </div><!--End col -->
+        </div><!-- End row -->
+        <div class="row">
+            <div class="col-6">
+                @if (ShowCommentSec)
+                {
+                    <div>
+                        <input type="text" class="input" placeholder="@title" @bind="@title"/>
+                        <textarea type="text" class="input" placeholder="@description" @bind="description"></textarea>
+                        <button type="button" class="btn btn-primary" @onclick="Done">Done</button>
+                        <button type="button" class="primaryContained" @onclick="Close">Close</button>
+
+                    </div>
+                    <!-- End col -->
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code
+{
+    public string editComment = "block";
+    public string title;
+    public string description;
+
+    [Parameter]
+    public int commenterid { get; set; }
+
+    [Parameter]
+    public int postId { get; set; }
+    
+    public int idPost;
+    public int idCommentor;
+    private CommentCreationDto dto = new CommentCreationDto();
+    [Parameter] public EventCallback<(int, string, string, int)> OnDoneCallback { get; set; }
+    [Parameter] public EventCallback<(int, int)> OnClickInfo { get; set; }
+    // [Parameter] public EventCallback<(int, int)> GetInfo{ get; set; }
+    // [Parameter] public CommentCreationDto CommentCreation { get; set; }
+    public string ModalDisplay = "none;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = true;
+    public bool ShowCommentSec = true;
+    List<string> comInfo = new List<string>();
+    // [Parameter] public Action<string,int> ItemClicked { get; set; }
+    public async Task Open()
+    {
+        // await OnClickInfo.InvokeAsync((commenterid, postId));
+        // idCommentor = commenterid;
+        // idPost = postId;
+        
+    }
+
+    public async Task Close()
+    {
+        ShowCommentSec = false;
+        ShowBackdrop = false;
+
+    }
+    
+    public async Task Done()
+    {
+      
+        postId = postId;
+        commenterid = commenterid;
+        this.description = description;
+        this.title = title;
+        try
+        {
+            dto = new CommentCreationDto();
+        
+            await OnDoneCallback.InvokeAsync((idCommentor, title, description, idPost));
+         
+            
+            dto.CommentTitle = title;
+            dto.CommentDescription = description;
+            dto.CommentorId = commenterid;
+            dto.PostId = postId;
+            await commentService.CreateCommentAsync(dto);
+            title = "";
+            description = "";
+           
+        }
+        catch (Exception e)
+        {
+            ModalClass = e.ToString();
+            Console.WriteLine(ModalClass);
+        }
+       
+        
+        ShowCommentSec = false;
+        editComment = "none";
+       
+    }
+    
+    
+    
+}
+}

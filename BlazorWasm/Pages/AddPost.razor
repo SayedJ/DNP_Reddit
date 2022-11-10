@@ -1,0 +1,110 @@
+@using Httpclient.ClientInterfaces
+@using BlazorWasm.ModelsToPass
+@using Domain.Models
+@using System.Security.Claims
+@using Domain.DTOs
+@inject IPostsService postService
+@inject IVoteService voteService
+@inject ICommentService commentServic;
+
+<AuthorizeView Roles="Writer">
+    <Authorized>
+     
+        <p>@sid   ->   @name</p> 
+            <div class="container">
+                <div class="row">
+                    <div >
+                    </div>
+                    <div class="form-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Your Title *" @bind="title" @bind:event="oninput"/>
+                                </div>
+                                <div class="form-group">
+                                    <textarea  rows="4" class="form-control" placeholder="Description *" @bind="description" @bind:event="oninput"></textarea>
+                                </div>
+                            </div>
+                            <div class="class-md-2">
+                                <button @onclick="Create">Submit</button>
+                            </div>
+                            @if (!string.IsNullOrEmpty(resultMsg))
+                            {
+                                <div class="alert-danger">
+                                    <h3>@resultMsg</h3>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+
+    private string title;
+    private  string description;
+    private int userid;
+
+    private string resultMsg;
+    private string color;
+    private string resultmsg2;
+    
+    
+    private string name;
+    private string sid;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    private IEnumerable<Claim>? userClaims; 
+    private bool isLoggedIn;
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        sid = user.FindFirst(c => c.Type == "sid")?.Value;
+
+        userid = Int32.Parse(sid);
+        name = user.Identity!.Name!;
+    }
+
+
+
+    private async Task Create()
+    {
+        resultMsg = "";
+        try
+        {
+            await postService.CreatePost(new PostCreationDto(userid, title, description));
+            
+            title = "";
+            description = "";
+            resultMsg = "Post has been created successfully!";
+            color = "green";
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            resultMsg = e.Message;
+            color = "red";
+        }
+
+      
+
+    }
+    private async Task GetMyPosts()
+    {
+        resultmsg2 = "";
+        
+    }
+
+    private bool showNothing = false;
+}

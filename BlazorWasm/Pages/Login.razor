@@ -1,0 +1,129 @@
+@page "/Login"
+@using Httpclient.ClientInterfaces
+@using Domain.DTOs
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using System.Security.Principal
+@using BlazorWasm.ModelsToPass
+@using Domain.Models
+@inject IUserServices userServices
+@inject NavigationManager navMgr
+
+<AuthorizeView>
+    <NotAuthorized>
+        
+        <div class="card col-md-8 div-part">
+            <h3>Login</h3>
+            <div class="form-group field">
+                <label>Email:</label>
+                <input type="text" @bind="email" @bind:event="oninput"/>
+                @if (!string.IsNullOrEmpty(resultMsg))
+                {
+                    @* <ValidationMessage For="() => email"/> *@
+                    <label style="color: @color">@resultMsg</label>
+                }
+        
+            </div>
+            <div class="form-group field">
+                <label>Password:</label>
+                <input type="password" @bind="password" @bind:event="oninput"/>
+                @if (!string.IsNullOrEmpty(resultMsg))
+                {
+                    @* <ValidationMessage For="() => password"/> *@
+                    <label style="color: @color">@resultMsg</label>
+                }
+        
+            </div>
+            <div class="button-row">
+                <button @onclick="LoginUser" disabled="@(string.IsNullOrEmpty(email))">Login</button>
+            </div>
+            
+         
+        
+        </div>
+    
+        @if (!string.IsNullOrEmpty(resultMsg))
+        {
+    
+            <div class="card">
+                <div class="card-header" style="margin-top: 15px; margin-bottom: 15px">
+                    <label style="color: @color">@resultMsg</label>
+                </div>
+            </div>
+        }
+    </NotAuthorized>
+       <Authorized>
+           <div class="card">
+              @name = @context.User.Identity?.Name
+              <h3>Hello, @context.User.Identity.Name</h3>
+              <div class="container-md">
+                  <div class="row-cols-auto">
+                      <div class="offset-2 col-3">
+                          <h3> My Posts</h3>
+                          <p> you can find all your posts here. </p>
+                          <button @onclick="GoToPosts">Go</button>
+                      </div>
+                      <div class="offset-2 col-3">
+                          <h3> Add a post</h3>
+                          <p> create a new post here. </p>
+                          <button @onclick="GoToCreate">Go</button>
+
+                      </div>
+                  </div>
+              </div>
+              
+           </div>
+        </Authorized>
+</AuthorizeView>
+
+@code {
+    [Required] private string email = "";
+    [Required] private string password = "";
+    [Required] private bool rememberMe = false;
+    private string name = " ";
+   
+    
+   
+    private string resultMsg = "";
+    private string color = "";
+ 
+
+    private async Task LoginUser()
+    {
+        resultMsg = "";
+    
+        // var users = userServices.GetAllUser();
+        // var userss = users.Result.GetEnumerator();
+
+        try
+        {
+            await userServices.LoginUser(email, password, rememberMe);
+            navMgr.NavigateTo("/");
+
+        }
+        catch (Exception e)
+        {
+            resultMsg =  $"Error: {e.Message}";
+            Console.WriteLine(resultMsg);
+            
+        }
+        
+    }
+
+    private async Task GoToPosts()
+    {
+        User user = new();
+        user = await userServices.FindByUsername(name);
+        navMgr.NavigateTo($"/Posts/{user.Id}");
+    }
+    
+    private async Task GoToCreate()
+    {
+        User user = new();
+        user = await userServices.FindByUsername(name);
+        navMgr.NavigateTo($"/Createnew/{user.Id}");
+    }
+  
+
+
+}

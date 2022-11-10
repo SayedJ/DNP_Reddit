@@ -1,0 +1,119 @@
+@page "/Register"
+
+@using Domain.Models
+@using Httpclient.ClientInterfaces
+@using Domain.DTOs
+@using System.ComponentModel.DataAnnotations
+@using System.Security.AccessControl
+@inject IUserServices userServices
+@inject NavigationManager navMgr
+
+<div class="container register-form">  
+<div class="form">  
+    <div class="note">  
+        <h1> Sign up form. </h1>  
+    </div>  
+    <div class="form-content">  
+        <div class="row">  
+            <div class="col-md-6">  
+                <div class="form-group">  
+                    <input type="text" class="form-control" placeholder="Your Name *" @bind="firstName" @bind:event="oninput"/>  
+                </div>  
+                <div class="form-group">  
+                    <input type="text" class="form-control" placeholder="Surname *" @bind="lastName" @bind:event="oninput"/>  
+                </div>  
+            </div>              
+            <div class="col-md-6">  
+                <div class="form-group">  
+                    <input type="password" class="form-control" placeholder="Your Password *" @bind="password" @bind:event="oninput"/>  
+                </div>  
+                <div class="form-group">  
+                    <input type="password" class="form-control" placeholder="Confirm Password *" @bind="rePassword" @bind:event="oninput" />  
+                </div>  
+            </div>  
+        </div>  
+        <div class="row align-items-center mt-4">  
+            <div class="col">  
+                <input type="text" class="form-control" placeholder=" Enter Email Address *" @bind="email" @bind:event="oninput">  
+            </div>  
+        </div> <div class="row align-items-center mt-4">  
+            <div class="col">  
+                <input type="text" class="form-control" placeholder=" Username *" @bind="username" @bind:event="oninput">  
+            </div>  
+        </div>  
+        <div class="row justify-content-start mt-4">  
+            <div class="col">  
+                <div class="form-check">  
+                    <label class="form-check-label">  
+                        <input type="checkbox" class="form-check-input">  
+                        I hereby agree to the <a href="/"> Terms and Conditions. </a>  
+                    </label>  
+                </div>  
+                <button @onclick="Create" disabled="@(string.IsNullOrEmpty(email))">Create</button>
+            </div>  
+        </div>  
+        
+    <div class="form-group field">
+        
+          @if (!string.IsNullOrEmpty(resultMsg))
+                {
+                    <h3>Warning!</h3>
+                    <ValidationMessage For="() => password"/>
+                    <label style="color: @color">@resultMsg</label>
+                }
+        
+    </div>
+    </div>  
+</div>
+</div>
+
+
+
+@code {
+
+
+    private string username = "";
+
+    [Required] private string firstName = "";
+    [Required] private string lastName = "";
+    [Required] private string email = "";
+    private string role = "";
+    private int securityL = 0;
+
+    private string phoneNumber = "";
+
+    [Required(ErrorMessage = "Password field is Required!")] [DataType(DataType.Password)] private string password = "";
+
+    [Required(ErrorMessage = "Confirm the password")] [DataType(DataType.Password)] private string rePassword = "";
+
+    private string resultMsg = "";
+    private string color = "";
+
+    private async Task Create()
+    {
+        resultMsg = "";
+        try
+        {
+            await userServices.CreateUser(new UserCreationDto(username, email, password, rePassword, firstName, lastName, role, securityL));
+            username = "";
+            firstName = "";
+            lastName = "";
+            email = "";
+            phoneNumber = "";
+            password = "";
+            rePassword = "";
+            role = "";
+            securityL = 0;
+            resultMsg = "User successfully created";
+            color = "green";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            resultMsg = e.Message;
+            color = "red";
+        }
+
+    }
+
+}

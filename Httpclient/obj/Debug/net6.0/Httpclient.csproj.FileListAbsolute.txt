@@ -1,0 +1,15 @@
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/bin/Debug/net6.0/Httpclient.deps.json
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/bin/Debug/net6.0/Httpclient.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/bin/Debug/net6.0/Httpclient.pdb
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/bin/Debug/net6.0/Domain.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/bin/Debug/net6.0/Domain.pdb
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.csproj.AssemblyReference.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.GeneratedMSBuildEditorConfig.editorconfig
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.AssemblyInfoInputs.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.AssemblyInfo.cs
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.csproj.CoreCompileInputs.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.csproj.CopyComplete
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/refint/Httpclient.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/Httpclient.pdb
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Httpclient/obj/Debug/net6.0/ref/Httpclient.dll

@@ -1,0 +1,277 @@
+@page "/Posts/{Id:int?}"
+@using Httpclient.ClientInterfaces
+@using Domain.Models
+@using System.Security.Claims
+@inject IPostsService postService
+@inject IVoteService voteService
+@inject ICommentService commentServic;
+
+
+
+@attribute [Authorize(Roles = "Writer")]
+<AuthorizeView>
+    <Authorized>
+
+        <div class="container">
+            <div class="row">
+
+                <h4>You have  @count  Posts</h4>
+            </div>
+            <div>
+               
+                <button type="button" @onclick="ShowHide"><i class=@iconChang></i></button>
+                
+            </div>
+            <div>
+                @if (!showAddPost)
+                {
+                }
+                else
+                {
+                    <AddPost></AddPost>
+                }
+                
+            </div>
+        </div>
+        @if (posts == null)
+        {
+        }
+        else if (!posts.Any())
+        {
+            <p>No posts to display</p>
+        }
+        else
+        {
+            <div class="container">
+                <div class="row">
+                    @foreach (var item in posts)
+                    {
+                        <div class="offset-md-4 col-md-12">
+                            <div class="col-md-8" style="background: lightblue;">
+                                @{ postId = item.Id;}
+                                <h5 id="@item.Title">@item.Title </h5> <button type="button" class="btn-danger" style="float: right"><i class="fa-regular fa-trash-can" onclick="@OnDelete"></i>Delete</button>
+                               <button type="button" class="btn-danger" style="float: right"><i class="fa-regular fa-trash-can" onclick="@OnDelete"></i>Delete</button> 
+                            </div>
+                            <div class="col-md-8" style="background: gainsboro; height: 150px;">
+                                <p>@item.Description</p>
+                            </div>
+                            <div class="row" style="child-align: right">
+
+                                <div class="col-2 col-sm-3 col-md-2" style="color: lightskyblue; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em; text-align: center; margin: 5px">
+                                    <button class="btn" id="@item.Id"><i class="fa-regular fa-comments"></i></button>
+                                    
+                                </div>
+                                <div class="col-1 col-md-1">
+                            
+                                </div>
+                                @if (votesAdded == null)
+                                {
+                                    <p>vote is null</p>
+                                }
+                                else if (!votesAdded.Any())
+                                {
+                                    <p>No votes to display</p>
+                                }
+                                else
+                                {
+
+                                    voteId++;
+                                    <div id="@voteId" class="col-2 col-sm-3 col-md-2" style="color:green; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
+
+                                        <p><i class="fa-solid fa-circle-up"></i> 0 </p>
+                                        </div>
+                                        <div class="col-1 col-md-1">
+
+                                        </div>
+                                        <div class="col-2 col-sm-3 col-md-2" style=" color: red; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
+                                            <p><i class="fa-solid fa-circle-down"></i> 0 </p>
+                                        </div>
+                                }
+                            </div>
+                        </div>
+                        @if (commentsAdded == null)
+                        {
+                        }
+                        else if (!commentsAdded.Any())
+                        {
+                            
+                            <p>No comments to display</p>
+                        }
+                        else
+                        {
+                            
+                            <div class="container" style="margin-bottom: 10px">
+                                <div class="row">
+                                    <div class="offset-4 row-cols-md-3" style="background: gainsboro; border: #1a1e21 solid 2px">
+                                        <h5><strong>Comments @commentsAdded.Count(c => c.OnPost.Id == item.Id).</strong></h5>
+                                        @foreach (var com in commentsAdded)
+                                        {
+                                            if (com.OnPost.Id == item.Id)
+                                            {
+                                                <div id="@com.Id">
+                                                    <div>
+                                                        <p><i>@com.Commentor.Username</i></p>
+                                                    </div>
+                                                    <div class="offset-1">
+                                                        <h6><strong>@com.CommentTitle</strong></h6>
+
+                                                    </div>
+                                                    <div class="offset-2">
+                                                        <p>@com.CommentDescription</p>
+                                                    </div>
+
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        @if (!string.IsNullOrEmpty(resultMsg))
+                        {
+                            <label style="color: red">@resultMsg</label>
+                        }
+                    }
+                </div>
+            </div>
+        }
+
+        
+     </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    private int postId;
+    private int voteId;
+    private string resultMsg;
+    private string color;
+    private int count = 0;
+    private string role;
+    private IEnumerable<Post>? posts;
+    private IEnumerable<Vote>? votes;
+    private IEnumerable<Comment>? comments;
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+
+    private IEnumerable<Claim>? userClaims;
+    private bool isLoggedIn;
+    private int downVotes = 0;
+    private int upVotes = 0;
+    private bool showAddPost = false;
+    private string iconChang = "fa-sharp fa-solid fa-plus";
+    private List<Comment> commentsAdded = new List<Comment>();
+    private List<Vote> votesAdded = new List<Vote>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+    // await LoadComments(postId);
+        if (!isLoggedIn) return;
+        userClaims = user.Claims;
+
+        await LoadPosts();
+
+
+    }
+
+    private async Task LoadPosts()
+    {
+        try
+        {
+            posts = await postService.GetAllMyPosts(id);
+            foreach (var item in posts)
+            {
+                postId = item.Id;
+                comments = await commentServic.AllOfThisPostComments(postId);
+                votes = await voteService.GetAllVotesonThisPost(postId);
+                commentsAdded.AddRange(comments);
+                votesAdded.AddRange(votes);
+
+            }
+
+            count = posts.Count();
+        }
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            throw new Exception(resultMsg);
+        }
+    }
+
+    private async Task LoadComments(int id)
+    {
+        try
+        {
+            comments = await commentServic.AllOfThisPostComments(id);
+
+        }
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            throw new Exception(resultMsg);
+
+        }
+    }
+
+    private async Task<IEnumerable<Vote>> LoadVotes(int thisId)
+    {
+        try
+        {
+            votes = await voteService.GetAllVotesonThisPost(thisId);
+            return votes;
+        }
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            throw new Exception(resultMsg);
+
+        }
+    }
+
+    private async Task ShowHide()
+    {
+        if (!showAddPost)
+        {
+            showAddPost = true;
+            iconChang = "fa-solid fa-minus";
+        }
+        else
+        {
+            showAddPost = false;
+            iconChang = "fa-sharp fa-solid fa-plus";
+        }
+    }
+
+    private async Task OnDelete()
+    {
+        try
+        {
+            await postService.DeleteAsync(postId);
+        }
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            
+        }
+       
+
+    }
+
+
+
+
+}

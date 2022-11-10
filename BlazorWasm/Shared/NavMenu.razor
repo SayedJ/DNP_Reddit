@@ -1,0 +1,93 @@
+﻿@using System.Security.Principal
+@using Domain.Models
+@using System.Security.Claims
+@inject NavigationManager navMgr
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">@name</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+      
+        <AuthorizeView>
+            <Authorized>
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" onclick="@GotoProfile" > *@
+        @*         <span class="oi oi-plus" aria-hidden="true" onclick="@GotoProfile"></span> My Posts  *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @*          *@
+            </Authorized>
+            <NotAuthorized>
+                
+        @if (!isLoggedIn)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="Register">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Register
+                </NavLink>
+            </div>
+        }
+            </NotAuthorized>
+        </AuthorizeView>
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="CreateNew"> *@
+        @*         <span class="oi oi-list-rich" aria-hidden="true"></span> Add new post *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="Posts"> *@
+        @*         <span class="oi oi-list-rich" aria-hidden="true"></span> Posts *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    [Parameter]
+    public int id { get; set; }
+    private string name;
+    private string sid;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    private IEnumerable<Claim>? userClaims; 
+    private bool isLoggedIn;
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        sid = user.FindFirst(c => c.Type == "sid")?.Value;
+
+        id = Int32.Parse(sid);
+        name = user.Identity!.Name!;
+    }
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public  void GotoProfile()
+    {
+        
+        navMgr.NavigateTo($"/Posts/{id}");
+    }
+}

@@ -1,0 +1,87 @@
+@page "/createNew/{Id:int?}"
+@using Httpclient.ClientInterfaces
+@using Domain.DTOs
+@using BlazorWasm.ModelsToPass
+@inject IPostsService _postsService
+
+<AuthorizeView> <NotAuthorized>
+    <div class="container">
+    <div class="row">
+        <div >
+            
+            <h2>@context.User.Identity.Name</h2>
+            <h3>Create a new Post</h3>
+        </div>
+        <div class="form-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Title *" @bind="title" @bind:event="oninput"/>
+                    </div>
+                    <div class="form-group">
+                        <textarea  rows="4" class="form-control" placeholder="Description *" @bind="description" @bind:event="oninput"></textarea>
+                    </div>
+                </div>
+                <div class="class-md-2">
+                    <button @onclick="Create">Submit</button>
+                </div>
+                @if (!string.IsNullOrEmpty(resultMsg))
+                {
+                    <div class="alert-danger">
+                        <h3>@resultMsg</h3>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+</NotAuthorized> </AuthorizeView>
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    private string title;
+    private  string description;
+    private int userid;
+  
+
+    private string resultMsg;
+    private string color;
+    private string resultmsg2;
+
+
+
+    private async Task Create()
+    {
+        resultMsg = "";
+        try
+        {
+       await _postsService.CreatePost(new PostCreationDto(id, title, description));
+            id = AppState.User.Id;
+            title = "";
+            description = "";
+            resultMsg = "Post has been created successfully!";
+            color = "green";
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            resultMsg = e.Message;
+            color = "red";
+        }
+
+      
+
+    }
+    private async Task GetMyPosts()
+    {
+        resultmsg2 = "";
+        
+    }
+    
+
+
+
+
+}

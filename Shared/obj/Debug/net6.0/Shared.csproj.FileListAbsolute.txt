@@ -1,0 +1,12 @@
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/bin/Debug/net6.0/Shared.deps.json
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/bin/Debug/net6.0/Shared.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/bin/Debug/net6.0/Shared.pdb
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.csproj.AssemblyReference.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.GeneratedMSBuildEditorConfig.editorconfig
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.AssemblyInfoInputs.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.AssemblyInfo.cs
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.csproj.CoreCompileInputs.cache
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/refint/Shared.dll
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/Shared.pdb
+/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/Shared/obj/Debug/net6.0/ref/Shared.dll

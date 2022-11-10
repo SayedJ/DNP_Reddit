@@ -1,0 +1,89 @@
+@page "/Profile/{Id:int?}"
+@using Httpclient.ClientInterfaces
+@using Domain.DTOs
+@using Domain.Models
+@using BlazorWasm.ModelsToPass
+@using System.Security.Claims
+@inject IUserServices userServices
+@inject AppState AppState
+@inject NavigationManager nvMgr
+
+ 
+<div class="container">
+    <div class="row">
+        <div class="div-part" onclick="@GoToEditAccount">
+            Account
+        </div>
+        
+        <div class="div-part" onclick="@GoToPosts">
+            Posts
+        </div>
+        
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="div-part" onclick="@GoToComments">
+            Comments
+        </div>
+        
+        <div class="div-part" onclick="@GoToVotes">
+            Votes
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string name;
+    private string sid;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; } = null!;
+    private IEnumerable<Claim>? userClaims; 
+    private bool isLoggedIn;
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authState = await AuthState;
+        ClaimsPrincipal user = authState.User;
+        isLoggedIn = user.Identity != null;
+        
+        if (!isLoggedIn) return;
+        
+        userClaims = user.Claims;
+        sid = user.FindFirst(c => c.Type == "sid")?.Value;
+
+        id = Int32.Parse(sid);
+        name = user.Identity!.Name!;
+    }
+    private async Task GoToPosts()
+    {
+        User user = new();
+        user = await userServices.GetUser(id);
+        nvMgr.NavigateTo($"/Posts/{user.Id}");
+    }
+    
+    private async Task GoToVotes()
+    {
+        User user = new();
+        user = await userServices.FindByUsername(name);
+        nvMgr.NavigateTo($"/Votes/{user.Id}");
+    }
+    private async Task GoToEditAccount()
+    {
+        User user = new();
+        user = await userServices.FindByUsername(name);
+        nvMgr.NavigateTo($"/Account/{user.Id}");
+    }
+    private async Task GoToComments()
+    {
+        User user = new();
+        user = await userServices.FindByUsername(name);
+        nvMgr.NavigateTo($"/Comments/{user.Id}");
+    }
+
+    
+
+    
+
+}
