@@ -1,3 +1,4 @@
+using Application.DTOs;
 using Application.LogicInterfaces;
 using Domain.DTOs;
 using Domain.Models;
@@ -17,7 +18,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Comment>> CreateAsync(CommentCreationDto comment)
+    public async Task<ActionResult<CommentRetreivingDto>> CreateAsync(CommentCreationDto comment)
     {
         try
         {
@@ -34,7 +35,7 @@ public class CommentController : ControllerBase
 
     [HttpGet]
     [Route("/[controller]/{id}")]
-    public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsOfThisPost(int id)
+    public async Task<ActionResult<List<CommentRetreivingDto>>> GetCommentsOfThisPost(int id)
     {
         try
         {

@@ -2,10 +2,12 @@
 @using Httpclient.ClientInterfaces
 @using Domain.Models
 @using System.Security.Claims
+@using Application.DTOs
+@using Domain.DTOs
 @inject IPostsService postService
 @inject IVoteService voteService
 @inject ICommentService commentServic;
-
+@inject IJSRuntime JsRuntime
 
 
 @attribute [Authorize(Roles = "Writer")]
@@ -15,7 +17,7 @@
         <div class="container">
             <div class="row">
 
-                <h4>You have  @count  Posts</h4>
+                <h4>You have @posts.Count()  Posts</h4>
             </div>
             <div>
                
@@ -25,6 +27,7 @@
             <div>
                 @if (!showAddPost)
                 {
+                    <p>nothing to show here</p>
                 }
                 else
                 {
@@ -35,6 +38,7 @@
         </div>
         @if (posts == null)
         {
+            <p>No posts to display</p>
         }
         else if (!posts.Any())
         {
@@ -48,51 +52,39 @@
                     {
                         <div class="offset-md-4 col-md-12">
                             <div class="col-md-8" style="background: lightblue;">
-                                @{ postId = item.Id;}
-                                <h5 id="@item.Title">@item.Title </h5> <button type="button" class="btn-danger" style="float: right"><i class="fa-regular fa-trash-can" onclick="@OnDelete"></i>Delete</button>
-                               <button type="button" class="btn-danger" style="float: right"><i class="fa-regular fa-trash-can" onclick="@OnDelete"></i>Delete</button> 
+                               @item.Title
                             </div>
                             <div class="col-md-8" style="background: gainsboro; height: 150px;">
                                 <p>@item.Description</p>
                             </div>
+                            <div align="right">
+                                <p>@item.Username</p>
+                            </div>
                             <div class="row" style="child-align: right">
-
-                                <div class="col-2 col-sm-3 col-md-2" style="color: lightskyblue; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em; text-align: center; margin: 5px">
-                                    <button class="btn" id="@item.Id"><i class="fa-regular fa-comments"></i></button>
-                                    
-                                </div>
+                                
                                 <div class="col-1 col-md-1">
                             
                                 </div>
-                                @if (votesAdded == null)
-                                {
-                                    <p>vote is null</p>
-                                }
-                                else if (!votesAdded.Any())
-                                {
-                                    <p>No votes to display</p>
-                                }
-                                else
-                                {
+                                <div class="col-2 col-sm-3 col-md-2" style=" color: red; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
+                                    <button @onclick="() => LoadComments(item.Id)" class="btn"><i class="fa-regular fa-comment"></i> </button>
+                                </div>
 
-                                    voteId++;
-                                    <div id="@voteId" class="col-2 col-sm-3 col-md-2" style="color:green; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
-
-                                        <p><i class="fa-solid fa-circle-up"></i> 0 </p>
-                                        </div>
-                                        <div class="col-1 col-md-1">
-
-                                        </div>
-                                        <div class="col-2 col-sm-3 col-md-2" style=" color: red; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
-                                            <p><i class="fa-solid fa-circle-down"></i> 0 </p>
-                                        </div>
-                                }
+                                <div class="col-2 col-sm-3 col-md-2" style=" color: red; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
+                                    <button @onclick="() => UpdateSymbol(item.Id)" class="btn"><i class="fa-solid fa-pen"></i> </button>
+                                </div>
+                                 
+                                <div class="col-2 col-sm-3 col-md-2" style=" color: red; text-shadow: 1px 1px 1px #c1d6cc; font-size: 1.5em;  text-align: center; margin: 5px">
+                                    <button @onclick="() => DeleteSymbol(item.Id)" class="btn"><i class="fa fa-trash"></i> </button>
+                                </div>
+                                
                             </div>
                         </div>
-                        @if (commentsAdded == null)
+                        @if(showComments){
+                        @if (comments == null)
                         {
+                            <p>comments are null</p>
                         }
-                        else if (!commentsAdded.Any())
+                        else if (!comments.Any())
                         {
                             
                             <p>No comments to display</p>
@@ -103,23 +95,20 @@
                             <div class="container" style="margin-bottom: 10px">
                                 <div class="row">
                                     <div class="offset-4 row-cols-md-3" style="background: gainsboro; border: #1a1e21 solid 2px">
-                                        <h5><strong>Comments @commentsAdded.Count(c => c.OnPost.Id == item.Id).</strong></h5>
-                                        @foreach (var com in commentsAdded)
+                                        @foreach (var com in comments)
                                         {
-                                            if (com.OnPost.Id == item.Id)
-                                            {
-                                                <div id="@com.Id">
+                                            if(string.Equals(com.Post, item.Title, StringComparison.OrdinalIgnoreCase)){
+                                                <div id="@item.Id">
                                                     <div>
-                                                        <p><i>@com.Commentor.Username</i></p>
+                                                        <p id="@com.Username"><i>@com.Username</i></p>
                                                     </div>
                                                     <div class="offset-1">
-                                                        <h6><strong>@com.CommentTitle</strong></h6>
+                                                        <h6 id="@com.Title"><strong>@com.Title</strong></h6>
 
                                                     </div>
                                                     <div class="offset-2">
-                                                        <p>@com.CommentDescription</p>
+                                                        <p id="@com.Post">@com.Description</p>
                                                     </div>
-
                                                 </div>
                                             }
                                         }
@@ -131,6 +120,7 @@
                         @if (!string.IsNullOrEmpty(resultMsg))
                         {
                             <label style="color: red">@resultMsg</label>
+                        }
                         }
                     }
                 </div>
@@ -154,10 +144,11 @@
     private string color;
     private int count = 0;
     private string role;
-    private IEnumerable<Post>? posts;
+    private IEnumerable<PostRetrievingDto>? posts;
     private IEnumerable<Vote>? votes;
-    private IEnumerable<Comment>? comments;
-
+    private List<Comments>? commentstoDto;
+    private IEnumerable<CommentRetreivingDto>? comments;
+    private Comment commentToChange;
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
 
@@ -165,9 +156,10 @@
     private bool isLoggedIn;
     private int downVotes = 0;
     private int upVotes = 0;
+    private bool showComments = false;
     private bool showAddPost = false;
     private string iconChang = "fa-sharp fa-solid fa-plus";
-    private List<Comment> commentsAdded = new List<Comment>();
+    private List<CommentRetreivingDto> commentsAdded = new List<CommentRetreivingDto>();
     private List<Vote> votesAdded = new List<Vote>();
 
     protected override async Task OnInitializedAsync()
@@ -186,66 +178,83 @@
 
     private async Task LoadPosts()
     {
+        commentstoDto = new List<Comments>();
+        commentToChange = new Comment();
         try
         {
             posts = await postService.GetAllMyPosts(id);
-            foreach (var item in posts)
+            
+        }
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            throw new Exception(resultMsg);
+        }
+    }
+
+    async Task LoadComments(int idTofind)
+    {
+        try
+        {
+            if (!showComments)
             {
-                postId = item.Id;
-                comments = await commentServic.AllOfThisPostComments(postId);
-                votes = await voteService.GetAllVotesonThisPost(postId);
-                commentsAdded.AddRange(comments);
-                votesAdded.AddRange(votes);
-
+                showComments = true;
+                comments  = await commentServic.AllOfThisPostComments(idTofind);
             }
-
-            count = posts.Count();
+            else
+            {
+                showComments = false;
+            }
+            
+            
         }
         catch (Exception e)
         {
-            resultMsg = e.Message;
             Console.WriteLine(e);
-            throw new Exception(resultMsg);
+            throw;
         }
+      
+        
+        
     }
 
-    private async Task LoadComments(int id)
-    {
-        try
-        {
-            comments = await commentServic.AllOfThisPostComments(id);
+    // private async Task LoadComments(int id)
+    // {
+    //     try
+    //     {
+    //         comments = await commentServic.AllOfThisPostComments(id);
+    //
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         resultMsg = e.Message;
+    //         Console.WriteLine(e);
+    //         throw new Exception(resultMsg);
+    //
+    //     }
+    // }
 
-        }
-        catch (Exception e)
-        {
-            resultMsg = e.Message;
-            Console.WriteLine(e);
-            throw new Exception(resultMsg);
-
-        }
-    }
-
-    private async Task<IEnumerable<Vote>> LoadVotes(int thisId)
-    {
-        try
-        {
-            votes = await voteService.GetAllVotesonThisPost(thisId);
-            return votes;
-        }
-        catch (Exception e)
-        {
-            resultMsg = e.Message;
-            Console.WriteLine(e);
-            throw new Exception(resultMsg);
-
-        }
-    }
+    // private async Task<IEnumerable<Vote>> LoadVotes(int thisId)
+    // {
+    //     try
+    //     {
+    //         votes = await voteService.GetAllVotesonThisPost(thisId);
+    //         return votes;
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         resultMsg = e.Message;
+    //         Console.WriteLine(e);
+    //         throw new Exception(resultMsg);
+    //
+    //     }
+    // }
 
     private async Task ShowHide()
     {
         if (!showAddPost)
         {
-            showAddPost = true;
             iconChang = "fa-solid fa-minus";
         }
         else
@@ -254,22 +263,22 @@
             iconChang = "fa-sharp fa-solid fa-plus";
         }
     }
-
-    private async Task OnDelete()
+    
+    async Task DeleteSymbol(int id)
     {
-        try
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
         {
-            await postService.DeleteAsync(postId);
+            await postService.DeleteAsync(id);
         }
-        catch (Exception e)
-        {
-            resultMsg = e.Message;
-            Console.WriteLine(e);
-            
-        }
-       
-
     }
+
+    async Task UpdateSymbol(int id)
+    {
+        // await postService
+    }
+
+  
 
 
 

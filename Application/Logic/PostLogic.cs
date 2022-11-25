@@ -21,30 +21,27 @@ public class PostLogic : IPostLogic
     }
     
     
-    public async Task<Post> CreatePostAsync(PostCreationDto postDto)
+    public async Task<PostRetrievingDto> CreatePostAsync(PostCreationDto postDto)
     {
 
-        User? existingUser = await userDao.GetByIdAsync(postDto.CreatorId);
+        User existingUser = await userDao.GetByIdAsync(postDto.CreatorId);
         
         if (existingUser == null)
             throw new Exception($"User with id {postDto.CreatorId} was not found");
         ValidData(postDto);
-        Post toCreate = new Post
-        {
+       Post toAdd = new Post
+       {   
+           Comments = new List<Comment>(),
+           Creator= existingUser, 
+           Title = postDto.Title,
+           Description = postDto.Description,
+           DownVotes = 0,
+           UpVotes = 0,
            
-            Title = postDto.Title,
-            Description = postDto.Description,
-            Creator = existingUser
-            
-            
-           
-
-        };
-        //Post post = new Post(existingUser, postDto.Title, postDto.Description);
-        
-        
-        Post created = await postDao.CreateAsync(toCreate);
-        return created;
+       };
+       
+       PostRetrievingDto created = await postDao.CreateAsync(toAdd);
+       return created;
     }
 
     private void ValidData(PostCreationDto postDto)
@@ -54,22 +51,22 @@ public class PostLogic : IPostLogic
     }
 
 
-    public Task<Post> GetPostByIdAsync(int id)
+    public Task<PostRetrievingDto> GetPostByIdAsync(int id)
     {
         return postDao.GetPostAsync(id);
     }
 
-    public Task<IEnumerable<Post>> GetAllPostsAsync()
+    public Task<List<PostRetrievingDto>> GetAllPostsAsync()
     {
         return postDao.GetAllPost();
     }
 
-    public Task<Post> GetPostByTitleAsync(string title)
-    {
-        return postDao.GetByTitle(title);
-    }
+    // public Task<PostRetrievingDto> GetPostByTitleAsync(string title)
+    // {
+    //     return postDao.GetByTitle(title);
+    // }
 
-    public Task<IEnumerable<Post>> GetAllMyPosts(int id)
+    public Task<List<PostRetrievingDto>> GetAllMyPosts(int id)
     {
         return postDao.GetAllMyPost(id);
     }
@@ -78,4 +75,15 @@ public class PostLogic : IPostLogic
     {
         await postDao.DeletePost(id);
     }
+
+    public async Task<int> AddVote(int id)
+    {
+        return await postDao.AddVote(id);
+    }
+
+    public async Task<int> DownVote(int id)
+    {
+        return await postDao.DownVote(id);
+    }
+    
 }

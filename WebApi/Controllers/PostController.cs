@@ -18,11 +18,11 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Post>> CreatePostAsync(PostCreationDto dto)
+    public async Task<ActionResult<PostRetrievingDto>> CreatePostAsync(PostCreationDto dto)
     {
         try
         {
-            Post? post = await postLogic.CreatePostAsync(dto);
+            PostRetrievingDto? post = await postLogic.CreatePostAsync(dto);
             return Created($"/post/{post.Id}", post);
 
         }
@@ -37,11 +37,11 @@ public class PostController : ControllerBase
 
     [HttpGet]
     [Route("/[controller]/{id}")]
-    public async Task<ActionResult<Post>> GetPostById(int id)
+    public async Task<ActionResult<PostRetrievingDto>> GetPostById(int id)
     {
         try
         {
-            Post post = await postLogic.GetPostByIdAsync(id);
+            PostRetrievingDto post = await postLogic.GetPostByIdAsync(id);
             return Ok(post);
         }
         catch (Exception e)
@@ -51,25 +51,25 @@ public class PostController : ControllerBase
         }
     }
 
-    [HttpGet]
-    [Route("/api/{title}")]
-    public async Task<ActionResult<Post>> GetPostByTitle(string title)
-    {
-        try
-        {
-            Post post = await postLogic.GetPostByTitleAsync(title);
-            return Ok(post);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new Exception($"The post with title {title}, can not be found!");
-        }
-    }
+    // [HttpGet]
+    // [Route("/api/{title}")]
+    // public async Task<ActionResult<Post>> GetPostByTitle(string title)
+    // {
+    //     try
+    //     {
+    //         Post post = await postLogic.GetPostByTitleAsync(title);
+    //         return Ok(post);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw new Exception($"The post with title {title}, can not be found!");
+    //     }
+    // }
 
     [HttpGet]
     [Route("/api/myPosts/{id}")]
-    public async Task<ActionResult<Post>> GetAllMyPosts(int id)
+    public async Task<ActionResult<List<PostRetrievingDto>>> GetAllMyPosts(int id)
     {
         try
         {
@@ -107,6 +107,37 @@ public class PostController : ControllerBase
         {
             await postLogic.DeletePost(id);
             return Ok("The post has been delete.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Route("/api/posts/upvote")]
+    public async Task<ActionResult> UpVote(int id)
+    {
+        try
+        {
+           int upvote = await postLogic.AddVote(id);
+            return Ok(upvote);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, e.Message);
+        }
+    }
+    [HttpPost]
+    [Route("/api/posts/downvote")]
+    public async Task<ActionResult> DownVote(int id)
+    {
+        try
+        {
+            int downVote = await postLogic.DownVote(id);
+            return Ok(downVote);
         }
         catch (Exception e)
         {

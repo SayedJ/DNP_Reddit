@@ -6,6 +6,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Application;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
@@ -77,19 +78,21 @@ public class UserController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    [HttpGet("writer")]
-    public async Task<ActionResult<IEnumerable<User>>> AllUsers()
+    // [HttpGet("writer")]
+    [HttpGet]
+    [Route("/api/user/allusers")]
+    public async Task<ActionResult<IQueryable<UserInfoRetrieving>>> AllUsers()
     {
-        Claim? claim = User.Claims.FirstOrDefault(claim => claim.Type.Equals(ClaimTypes.Role));
-        if (claim == null)
-        {
-            return StatusCode(403, "You have no role");
-        }
-        if (!claim.Value.Equals("Writer"))
-        {
-            return StatusCode(403, "You are not a teacher");
-        }
-            
+        // Claim? claim = User.Claims.FirstOrDefault(claim => claim.Type.Equals(ClaimTypes.Role));
+        // if (claim == null)
+        // {
+        //     return StatusCode(403, "You have no role");
+        // }
+        // if (!claim.Value.Equals("Writer"))
+        // {
+        //     return StatusCode(403, "You are not a teacher");
+        // }
+        //     
         try
         {
             var users = await userLogic.GetAsync();
@@ -102,8 +105,8 @@ public class UserController : ControllerBase
         }
     }
     [HttpPost]
-    [Route("/api/login")]
-    public async Task<ActionResult<User>> Login([FromBody]LoginModelDto user)
+    [Route("/api/login/")]
+    public async Task<ActionResult<User>> Login(LoginModelDto user)
     {
         try
         {

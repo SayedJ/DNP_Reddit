@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "26SSN4U6qztxvbJVtzSGGjKTp/Wh8TyOnIOZHJ67/oQ=",
+  "Hash": "w2ZZB/KyPzifSNnbt+Oyadyy7RUdsTth191ta56+7xk=",
   "Source": "BlazorWasm",
   "BasePath": "/",
   "Mode": "Root",
@@ -1545,6 +1545,23 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/usr/local/share/dotnet/packs/Microsoft.NETCore.App.Runtime.Mono.browser-wasm/6.0.8/runtimes/browser-wasm/lib/net6.0/netstandard.dll"
+    },
+    {
+      "Identity": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/_framework/Newtonsoft.Json.dll",
+      "SourceId": "BlazorWasm",
+      "SourceType": "Computed",
+      "ContentRoot": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/",
+      "BasePath": "/",
+      "RelativePath": "_framework/Newtonsoft.Json.dll",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "BlazorWebAssemblyResource",
+      "AssetTraitValue": "runtime",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "/Users/test/.nuget/packages/newtonsoft.json/13.0.2/lib/net6.0/Newtonsoft.Json.dll"
     },
     {
       "Identity": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/_framework/Shared.dll",
@@ -5642,6 +5659,23 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/_framework/System.Resources.Reader.dll"
+    },
+    {
+      "Identity": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/obj/Debug/net6.0/build-gz/GcuvyAai.gz",
+      "SourceId": "BlazorWasm",
+      "SourceType": "Computed",
+      "ContentRoot": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/",
+      "BasePath": "/",
+      "RelativePath": "_framework/Newtonsoft.Json.dll.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "RelatedAsset": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/_framework/Newtonsoft.Json.dll",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/bin/Debug/net6.0/wwwroot/_framework/Newtonsoft.Json.dll"
     },
     {
       "Identity": "/Users/test/Documents/Courses/DNP/Assignment/Assignment_Reddit/BlazorWasm/obj/Debug/net6.0/build-gz/gORVd3DE.gz",

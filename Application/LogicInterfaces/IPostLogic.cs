@@ -5,13 +5,16 @@ namespace Application.LogicInterfaces;
 
 public interface IPostLogic
 {
-    Task<Post> CreatePostAsync(PostCreationDto post);
-    Task<Post> GetPostByIdAsync(int id);
-    Task<IEnumerable<Post>> GetAllPostsAsync();
-    Task<Post> GetPostByTitleAsync(string title);
-    Task<IEnumerable<Post>> GetAllMyPosts(int id);
+    Task<PostRetrievingDto> CreatePostAsync(PostCreationDto post);
+    Task<PostRetrievingDto> GetPostByIdAsync(int id);
+    Task<List<PostRetrievingDto>> GetAllPostsAsync();
+    // Task<Post> GetPostByTitleAsync(string title);
+    Task<List<PostRetrievingDto>> GetAllMyPosts(int id);
 
     Task DeletePost(int id);
+
+    Task<int> AddVote(int id);
+    Task<int> DownVote(int id);
 
 
 }

@@ -62,7 +62,7 @@ public class UserLogic : IUserLogic
             throw new Exception("Password and Re-Password must match");
     }
 
-    public Task<IEnumerable<User>> GetAsync()
+    public Task<IQueryable<UserInfoRetrieving>> GetAsync()
     {
         return userDao.GetAsync();
     }

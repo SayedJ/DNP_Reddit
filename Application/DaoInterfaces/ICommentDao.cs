@@ -1,12 +1,14 @@
+using Application.DTOs;
+using Domain.DTOs;
 using Domain.Models;
 
 namespace Application.DaoInterfaces;
 
 public interface ICommentDao
 {
-    Task<Comment> CreateAsync(Comment comment);
+    Task<CommentRetreivingDto> CreateAsync(CommentCreationDto comment);
     Task<Comment> GetCommentAsync(int id);
-    Task<IEnumerable<Comment>> GetAllCommentsAsync();
-    Task<IEnumerable<Comment>> GetAllCommentsOnThisPostAsync(int id);
+    Task<List<Comment>> GetAllCommentsAsync();
+    Task<List<CommentRetreivingDto>> GetAllCommentsOnThisPostAsync(int id);
 
 }

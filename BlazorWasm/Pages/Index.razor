@@ -4,72 +4,51 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
 @using System.Security.Principal
+@using Application
+@using Application.DTOs
 @using BlazorWasm.ModelsToPass
 @using BootstrapBlazor.Components
 @using Domain.Models
+@using Console = System.Console
+@using System.Collections
+@using System.Security.Cryptography.X509Certificates
 @inject IUserServices userServices
 @inject IPostsService postServices
 @inject ICommentService commentService
 @inject NavigationManager navMgr
 
 
-@* <AuthorizeView> *@
-@*     <Authorized> *@
-    
-            @*    <p>@context.User.Claims.First(claim => claim.Type.Equals(ClaimTypes.Role)).Value</p> *@
-            @* *@
-@* <h3>Hello, @context.User.Identity.Name</h3> *@
+
 @if (isLoggedIn)
 {
-<button type="button" class="btn btn-secondary" onclick="@GoToPosts">My Posts</button>
+    <button type="button" class="btn btn-secondary" onclick="@GoToPosts">My Posts</button>
     
 }
-<section id="app">
-         <div class="container">
-                 @foreach (var item in posts)
-                 {  
-                     <div class="col-8" style="margin-top: 50px">
-                         <div class="posts">
-                             <h3 class="align-items-center">@item.Title</h3>
-                             <div class="comment">
-                                 <p>@item.Description</p>
-                             </div>
-                             <div class='primaryContained float-right'>
-                                 <h6>@item.Creator.Username</h6>
-                             </div>
-                         </div>
-                         @{
-                             commentorID = id;
-                             postId = _postId;
-                         }
-                     </div>
-                     <button class="btn btn-block primaryContained"  id="@item.Id" @onclick="ShowHide" type="button"> <i class="@iconChang"></i></button>
-                     @if(showAddPost){
-                         <Comments commenterid="@commentorID" postId="@item.Id" OnDoneCallback="@((args) => OnModalDone(commentorID, _title, _description, _postId))"></Comments>
-                     }
-                     
-                     
-                     // GetInfo="@((args) =>GetInfo(_commentorId, item.Id))"
-                 }
-             
-         </div><!--End Container -->
-     </section><!-- end App -->
-      
-@*     </Authorized> *@
-@* </AuthorizeView> *@
+@foreach (var item in posts)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div>
+                    <h3>@item.Title</h3>
+                </div>
+                <div>
+                    @item.Description
+                </div>
+                <div>@item.Username</div>
+                
+            </div>
+        </div>
+    </div>
+}
+
 
 @code
 {
     
-    public string _title { get; set; }
+
     private string title;
     public Comments modal { get; set; }
-    public int commentorID;
-    public string commentTitle { get; set; }
-    public string description;
-    public string _description { get; set; }
-    public int _postId;
-    public int _commentorId;
 
     private int userId;               
     private int id;
@@ -77,27 +56,21 @@
     private string name;
     private string sid;
     private int itemId;
+    private int getCount;
+    private string resultMsg;
+    private int getAllCounts;
+    private IEnumerable<PostRetrievingDto>? posts;
+    private IEnumerable<CommentRetreivingDto>? comments;
     [CascadingParameter]
     public Task<AuthenticationState> AuthState { get; set; } = null!;
     private IEnumerable<Claim>? userClaims; 
     private bool isLoggedIn;
-    private IEnumerable<Post> posts = new List<Post>();
-    private IEnumerable<Comment> comments = new List<Comment>();
-    private List<Comment> commentsAdded = new List<Comment>();
+    private List<CommentRetreivingDto> commentsAdded;
     public bool showAddPost = false;
     public string iconChang = "fa-regular fa-comment-dots";
     
 
-    private async void OnModalDone(int idOfUser, string ti, string des, int posId)
-    {
-        
-        // _description = des;
-        // _postId = posId;
-        // _commentorId = idOfUser;
-        // commentTitle = ti;
-        await modal.Done();
-
-    }
+  
     private string message;
     private bool DialogIsOpen = false;
     protected override async Task OnInitializedAsync()
@@ -113,29 +86,54 @@
 
         id = Int32.Parse(sid);
         name = user.Identity!.Name!;
-        _commentorId = id;
-        
-        await AllPosts();
+
+        await LoadPosts();
 
     }
 
-    private async Task AllPosts()
+    private async Task LoadPosts()
     {
-        posts = await postServices.GetAllPosts();
-        foreach (var item in posts)
+        try
         {
-            postId = item.Id;
-            // comments = await commentService.AllOfThisPostComments(postId);
-            // commentsAdded.AddRange(comments);
+            posts = await postServices.GetAllPosts() ?? new List<PostRetrievingDto>();
         }
-        
+        catch (Exception e)
+        {
+            resultMsg = e.Message;
+            Console.WriteLine(e);
+            throw new Exception(resultMsg);
+        }
+    }
+    private async Task ShowHide()
+    {
+        if (!showAddPost)
+        {
+            showAddPost = true;
+            iconChang = "fa-solid fa-minus";
+        }
+        else
+        {
+            showAddPost = false;
+            iconChang = "fa-sharp fa-solid fa-plus";
+        }
     }
 
-    private async Task AddComment()
+    private async Task OnDelete()
     {
-        CommentCreationDto com = new CommentCreationDto(id, title, description, postId);
-        await commentService.CreateCommentAsync(com);
+        try
+        {
+            await postServices.DeleteAsync(postId);
+        }
+        catch (Exception e)
+        {
+             resultMsg= e.Message;
+            Console.WriteLine(e);
+            
+        }
+       
+
     }
+
     private async Task GoToPosts()
     {
         
@@ -150,23 +148,16 @@
         user = await userServices.FindByUsername(name);
         navMgr.NavigateTo($"/Createnew/{user.Id}");
     }
-    
-    private async Task ShowHide()
-    {
-        if (!showAddPost)
-        {
-            showAddPost = true;
-            iconChang ="fa-solid fa-comment-dots";
-        }
-        else
-        {
-            showAddPost = false;
-        }
-    }
-    public  void GotoProfile()
+    private async void OnModalDone(int idOfUser, string ti, string des, int posId)
     {
         
-        navMgr.NavigateTo($"/Posts/{commentorID}");
+    // _description = des;
+    // _postId = posId;
+    // _commentorId = idOfUser;
+    // commentTitle = ti;
+        await modal.Done();
+
     }
-    
+
+
 }

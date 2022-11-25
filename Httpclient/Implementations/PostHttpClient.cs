@@ -15,7 +15,7 @@ public class PostHttpClient : IPostsService
         this.client = client;
     }
     
-    public async Task<Post> CreatePost(PostCreationDto post)
+    public async Task<PostRetrievingDto> CreatePost(PostCreationDto post)
     {
         var response = await client.PostAsJsonAsync("api/post", post);
         var result = await response.Content.ReadAsStringAsync();
@@ -23,7 +23,7 @@ public class PostHttpClient : IPostsService
         {
             throw new Exception(result);
         }
-        Post postReturn = JsonSerializer.Deserialize<Post>(result, new JsonSerializerOptions
+        PostRetrievingDto postReturn = JsonSerializer.Deserialize<PostRetrievingDto>(result, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
@@ -31,7 +31,7 @@ public class PostHttpClient : IPostsService
 
     }
 
-    public async Task<Post> GetPost(int id)
+    public async Task<PostRetrievingDto> GetPost(int id)
     {
         var response = await client.GetAsync($"api/Post/{id}");
         var content = await response.Content.ReadAsStringAsync();
@@ -40,7 +40,7 @@ public class PostHttpClient : IPostsService
             throw new Exception(content);
         }
 
-        Post post = JsonSerializer.Deserialize<Post>(content, 
+        PostRetrievingDto post = JsonSerializer.Deserialize<PostRetrievingDto>(content, 
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -48,7 +48,7 @@ public class PostHttpClient : IPostsService
         return post;
     }
 
-    public async Task<IEnumerable<Post>> GetAllMyPosts(int id)
+    public async Task<List<PostRetrievingDto>> GetAllMyPosts(int id)
     {
         var response = await client.GetAsync($"api/myPosts/{id}");
         var content = await response.Content.ReadAsStringAsync();
@@ -57,7 +57,7 @@ public class PostHttpClient : IPostsService
             throw new Exception(content);
         }
 
-        var posts = JsonSerializer.Deserialize<IEnumerable<Post>>(content, 
+        var posts = JsonSerializer.Deserialize<List<PostRetrievingDto>>(content, 
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -65,16 +65,16 @@ public class PostHttpClient : IPostsService
         return posts;
     }
 
-    public async Task<IEnumerable<Post>> GetAllPosts()
+    public async Task<List<PostRetrievingDto>> GetAllPosts()
     {
-        var response = await client.GetAsync($"api/posts/");
+        var response = await client.GetAsync("api/posts");
         var content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
             throw new Exception(content);
         }
 
-        var posts = JsonSerializer.Deserialize<IEnumerable<Post>>(content, 
+        var posts = JsonSerializer.Deserialize<List<PostRetrievingDto>>(content, 
             new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -84,11 +84,22 @@ public class PostHttpClient : IPostsService
 
     public async Task DeleteAsync(int id)
     {
-        HttpResponseMessage response = await client.DeleteAsync($"api/posts/{id}");
+        HttpResponseMessage response = await client.DeleteAsync($"api/post/{id}");
         if (!response.IsSuccessStatusCode)
         {
             string content = await response.Content.ReadAsStringAsync();
             throw new Exception(content);
         }
+    }
+
+    public async Task<int> UpVote(int id)
+    {
+        HttpResponseMessage response = await client.DeleteAsync($"api/posts/{id}");
+        throw new NotImplementedException();
+    }
+
+    public Task<int> DownVote(int id)
+    {
+        throw new NotImplementedException();
     }
 }

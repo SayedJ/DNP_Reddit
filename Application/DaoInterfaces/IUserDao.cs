@@ -7,9 +7,10 @@ public interface IUserDao
 {
     Task<User> CreateAsync(User user);
     Task<User?> GetByEmailAsync(string email);
-    Task<IEnumerable<User>> GetAsync();
+    Task<IQueryable<UserInfoRetrieving>> GetAsync();
     Task<User> GetUserByUsernameAsync(string username);
 
     Task<User> LoginAsync(LoginModelDto dto);
     Task<User?> GetByIdAsync(int dtoOwnerId);
+    
 }

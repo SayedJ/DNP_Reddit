@@ -72,4 +72,17 @@ public class PostFileDao : IPostDao
         Post post = context.Posts.FirstOrDefault(t => t.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
         return Task.FromResult(post);
     }
+
+    public Task<int> AddVote(int id)
+    {
+        Post post = context.Posts.FirstOrDefault(c => c.Id == id);
+        post.UpVotes++;
+        return Task.FromResult(post.UpVotes);
+    }
+    public Task<int> DownVote(int id)
+    {
+        Post post = context.Posts.FirstOrDefault(c => c.Id == id);
+        post.DownVotes++;
+        return Task.FromResult(post.DownVotes);
+    }
 }

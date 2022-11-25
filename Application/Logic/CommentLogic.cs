@@ -1,4 +1,5 @@
 using Application.DaoInterfaces;
+using Application.DTOs;
 using Application.LogicInterfaces;
 using Domain.DTOs;
 using Domain.Models;
@@ -22,25 +23,9 @@ public class CommentLogic : ICommentLogic
     
     
     
-    public async Task<Comment> CreateAsync(CommentCreationDto dto)
+    public async Task<CommentRetreivingDto> CreateAsync(CommentCreationDto dto)
     {
-        User? user = await userDao.GetByIdAsync(dto.CommentorId);
-        Post? post = await postDao.GetPostAsync(dto.PostId);
-     
-        if (user == null)
-            throw new Exception($"User {dto.CommentorId} can not be found!");
-        if (post == null)
-            throw new Exception($"Post {dto.PostId} can not be found");
-        Comment inPutComment = new Comment(user, dto.CommentTitle, dto.CommentDescription, post);
-        Comment newComment = new Comment{
-            CommentDescription = dto.CommentDescription,
-            Commentor = user,
-            CommentTitle = dto.CommentTitle,
-            OnPost = post
-            
-            
-        };
-        var toCreate = await commDao.CreateAsync(newComment);
+        var toCreate = await commDao.CreateAsync(dto);
         return toCreate;
     }
 
@@ -49,13 +34,13 @@ public class CommentLogic : ICommentLogic
         return await commDao.GetCommentAsync(id);
     }
 
-    public async Task<IEnumerable<Comment>> GetAllCommentsOnThisPost(int id)
+    public async Task<List<CommentRetreivingDto>> GetAllCommentsOnThisPost(int id)
     {
         return await commDao.GetAllCommentsOnThisPostAsync(id);
     }
 
 
-    public async Task<IEnumerable<Comment>> GetAllComments()
+    public async Task<List<Comment>> GetAllComments()
     {
         return await commDao.GetAllCommentsAsync();
     }

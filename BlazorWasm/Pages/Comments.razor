@@ -3,6 +3,7 @@
 @using Domain.Models
 @using Httpclient.ClientInterfaces
 @using Console = System.Console
+@using Application.DTOs
 @inject ICommentService commentService
 @if (ShowBackdrop)
 {
@@ -10,10 +11,12 @@
 
         <div class="row">
             <div class="col-6">
+                @foreach(var com in myComments){
                 <div class="comment">
-                    <p>@dto.CommentTitle</p>
-                    <p>@dto.CommentDescription</p>
+                    <p>@com.Title</p>
+                    <p>@com.Description</p>
                 </div><!--End Comment-->
+                }
             </div><!--End col -->
         </div><!-- End row -->
         <div class="row">
@@ -48,6 +51,7 @@
     
     public int idPost;
     public int idCommentor;
+    private List<CommentRetreivingDto> myComments;
     private CommentCreationDto dto = new CommentCreationDto();
     [Parameter] public EventCallback<(int, string, string, int)> OnDoneCallback { get; set; }
     [Parameter] public EventCallback<(int, int)> OnClickInfo { get; set; }
@@ -64,7 +68,8 @@
         // await OnClickInfo.InvokeAsync((commenterid, postId));
         // idCommentor = commenterid;
         // idPost = postId;
-        
+        List<CommentRetreivingDto> CommentToShow = await LoadComments();
+
     }
 
     public async Task Close()
@@ -108,8 +113,10 @@
         editComment = "none";
        
     }
-    
-    
-    
-}
+
+    public async Task<List<CommentRetreivingDto>> LoadComments()
+    {
+        myComments = await commentService.AllOfThisPostComments(postId);
+        return myComments;
+    }
 }

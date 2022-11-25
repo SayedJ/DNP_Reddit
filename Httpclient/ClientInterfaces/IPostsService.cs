@@ -5,12 +5,15 @@ namespace Httpclient.ClientInterfaces;
 
 public interface IPostsService
 {
-  Task<Post> CreatePost(PostCreationDto post);
-  Task<Post> GetPost(int id);
-  Task<IEnumerable<Post>> GetAllMyPosts(int id);
+  Task<PostRetrievingDto> CreatePost(PostCreationDto post);
+  Task<PostRetrievingDto> GetPost(int id);
+  Task<List<PostRetrievingDto>> GetAllMyPosts(int id);
 
-  Task<IEnumerable<Post>> GetAllPosts();
+  Task<List<PostRetrievingDto>> GetAllPosts();
 
   Task DeleteAsync(int id);
+
+  Task<int> UpVote(int id);
+  Task<int> DownVote(int id);
 
 }

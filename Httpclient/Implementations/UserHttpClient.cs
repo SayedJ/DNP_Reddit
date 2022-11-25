@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text.Json;
+using Application;
 using Domain.DTOs;
 using Domain.Models;
 using Httpclient.ClientInterfaces;
@@ -75,7 +76,7 @@ public class UserHttpClient : IUserServices
             keyValuePairs.Remove(ClaimTypes.Role);
         }
     }
-    public async Task<User> CreateUser(UserCreationDto dto)
+    public async Task<UserInfoRetrieving> CreateUser(UserCreationDto dto)
     {
         var response = await client.PostAsJsonAsync("api/user", dto);
         var result = await response.Content.ReadAsStringAsync();
@@ -83,7 +84,7 @@ public class UserHttpClient : IUserServices
         {
             throw new Exception(result);
         }
-        User user = JsonSerializer.Deserialize<User>(result, new JsonSerializerOptions
+        UserInfoRetrieving user = JsonSerializer.Deserialize<UserInfoRetrieving>(result, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
@@ -109,7 +110,7 @@ public class UserHttpClient : IUserServices
 
     }
 
-    public async Task<IEnumerable<User>> GetAllUser()
+    public async  Task<IQueryable<UserInfoRetrieving>> GetAllUser()
     {
         var response = await client.GetAsync("api/user");
         var content = await response.Content.ReadAsStringAsync();
@@ -118,7 +119,7 @@ public class UserHttpClient : IUserServices
             throw new Exception(content);
         }
 
-        var users = JsonSerializer.Deserialize<IEnumerable<User>>(content, new JsonSerializerOptions
+        var users = JsonSerializer.Deserialize<IQueryable<UserInfoRetrieving>>(content, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         })!;
@@ -128,7 +129,7 @@ public class UserHttpClient : IUserServices
     public async Task LoginUser(string email, string password, bool rememberMe = false)
     {
         LoginModelDto user = new(email, password, rememberMe);
-        var response = await client.PostAsJsonAsync("/api/login", user);
+        var response = await client.PostAsJsonAsync("/api/login/", user);
         string result = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
         {
